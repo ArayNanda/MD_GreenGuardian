@@ -31,4 +31,9 @@
         <item name="android:text">Your Text</item>
         <item name="android:icon">@drawable/ic_google</item>
     </style>
+    <style name="roundedImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="color">@color/white</item>
+    </style>
 </resources>

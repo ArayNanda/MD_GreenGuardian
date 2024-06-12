@@ -4,70 +4,108 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_bg_template"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/MainScreenImage"
-        android:layout_width="400dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="80dp"
-        android:src="@drawable/logo_splash"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
-        android:id="@+id/PrimaryText"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="TAKE CARE OF YOUR PLANTS"
-        android:textAlignment="center"
+        android:text="Loading.."
+        android:textSize="24dp"
+        android:fontFamily="@font/poppins_bold"
         android:textColor="@color/black"
-        android:textSize="32dp"
-        android:textStyle="bold"
-        android:fontFamily="@font/poppins_semi_bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/MainScreenImage" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.212" />
 
     <TextView
-        android:id="@+id/SecondaryText"
-        android:layout_width="260dp"
+        android:id="@+id/paragraph"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="And know what Diseases threaten your Plants"
-        android:textAlignment="center"
-        android:textColor="@color/greyText"
+        android:text="Start detecting diseases in your plants by taking pictures of them"
         android:textSize="16dp"
         android:fontFamily="@font/poppins_semi_bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/greyText"
+        android:layout_marginLeft="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PrimaryText" />
+        app:layout_constraintTop_toBottomOf="@+id/name"/>
 
-    <include
-        android:id="@+id/googleButton"
-        layout="@layout/custom_gradient_button"
-        android:layout_width="327dp"
-        android:layout_height="52dp"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dropzone"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/dropzone_background"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SecondaryText" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/paragraph">
+
+        <ImageView
+            android:id="@+id/cameraIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_camera"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Click here to upload your plants!"
+            android:textSize="16sp"
+            android:textColor="@color/greyText"
+            app:layout_constraintTop_toBottomOf="@id/cameraIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+        
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <ImageView
+        android:id="@+id/removeImageIcon"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_close"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/paragraph" />
 
     <Button
-        android:id="@+id/BtnGuest"
-        style="@style/CustomButtonGrey"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="20dp"
-        android:text="Continue as Guest"
-        android:textSize="16dp"
+        android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="logout"
+        android:layout_marginTop="30dp"
+        android:background="@color/red"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/googleButton" />
+        app:layout_constraintTop_toBottomOf="@+id/dropzone" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
