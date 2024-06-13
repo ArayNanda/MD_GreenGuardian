@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.greenguardian" />
-                  <option name="mobileSdkAppId" value="1:1096155437831:android:6d64a7eba4aba1289543a2" />
-                  <option name="projectId" value="greenguardian-d65f0" />
-                  <option name="projectNumber" value="1096155437831" />
+                  <option name="mobileSdkAppId" value="1:298148258574:android:cd1b495b0858ebffdaed5f" />
+                  <option name="projectId" value="greenguardian-426110" />
+                  <option name="projectNumber" value="298148258574" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

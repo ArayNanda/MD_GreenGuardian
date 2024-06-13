@@ -2,10 +2,22 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-
 }
 
 android {
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("/Users/taufikamf/MD_GreenGuardian/greenGuardian.jks")
+            storePassword = "123456789"
+            keyAlias = "GreenGuardian"
+            keyPassword = "123456789"
+        }
+    }
+
+    viewBinding {
+        enable = true
+    }
+
     namespace = "com.example.greenguardian"
     compileSdk = 34
 
@@ -49,6 +61,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("com.google.android.material:material:1.9.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

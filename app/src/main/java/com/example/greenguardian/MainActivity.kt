@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
+import android.view.MenuItem
 import android.widget.Button
 import android.view.WindowManager
 import android.widget.ImageView
@@ -12,44 +14,55 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var mAuth: FirebaseAuth
 
-    private lateinit var dropzone: ConstraintLayout
-    private lateinit var imagePreview: ImageView
-    private lateinit var cameraIcon: ImageView
-    private lateinit var textView: TextView
-    private lateinit var removeImageIcon: ImageView
-
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
+    private lateinit var profileIcon: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        dropzone = findViewById(R.id.dropzone)
-        imagePreview = findViewById(R.id.imagePreview)
-        cameraIcon = findViewById(R.id.cameraIcon)
-        textView = findViewById(R.id.textView)
-        removeImageIcon = findViewById(R.id.removeImageIcon)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
 
-        dropzone.setOnClickListener {
-            selectImageFromGallery()
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+        profileIcon = findViewById(R.id.profileIcon)
+
+        profileIcon.setOnClickListener {
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.END)
+            }
         }
 
-        removeImageIcon.setOnClickListener {
-            removeImage()
+        navigationView.setNavigationItemSelectedListener(this)
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HomeFragment()).commit()
+            navigationView.setCheckedItem(R.id.nav_home)
         }
 
         mAuth = FirebaseAuth.getInstance()
@@ -61,56 +74,27 @@ class MainActivity : AppCompatActivity() {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        val textView = findViewById<TextView>(R.id.name)
+//        val textView = findViewById<TextView>(R.id.name)
 
         val auth = Firebase.auth
         val user = auth.currentUser
 
-        if (user != null) {
-            val userName = user.displayName
-            textView.text = "Hi, " + userName+ "  \uD83D\uDC4B"
-        } else {
-            // Handle the case where the user is not signed in
-        }
+//        if (user != null) {
+//            val userName = user.displayName?.split(" ")?.get(0) ?: "User"
+//            textView.text = "Hi, " + userName+ "  \uD83D\uDC4B"
+//        } else {
+//
+//        }
 
-        val sign_out_button = findViewById<Button>(R.id.logout_button)
-        sign_out_button.setOnClickListener {
-            signOutAndStartSignInActivity()
-        }
+//        val sign_out_button = findViewById<Button>(R.id.logout_button)
+//        sign_out_button.setOnClickListener {
+//            signOutAndStartSignInActivity()
+//        }
 
     }
-
-    private fun selectImageFromGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        galleryLauncher.launch(intent)
-    }
-
-    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val data: Intent? = result.data
-            val imageUri: Uri? = data?.data
-            imageUri?.let {
-                displayImage(it)
-            }
-        }
-    }
-
-    private fun displayImage(imageUri: Uri) {
-        imagePreview.setImageURI(imageUri)
-        imagePreview.visibility = ImageView.VISIBLE
-        cameraIcon.visibility = ImageView.GONE
-        textView.visibility = ImageView.GONE
-        removeImageIcon.visibility = ImageView.VISIBLE
-    }
-    private fun removeImage() {
-        imagePreview.visibility = ImageView.GONE
-        cameraIcon.visibility = ImageView.VISIBLE
-        textView.visibility = ImageView.VISIBLE
-        removeImageIcon.visibility = ImageView.INVISIBLE
-    }
-
 
     private fun signOutAndStartSignInActivity() {
+        drawerLayout.closeDrawers()
         mAuth.signOut()
 
         mGoogleSignInClient.signOut().addOnCompleteListener(this) {
@@ -118,6 +102,38 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, SignInActivity::class.java)
             startActivity(intent)
             finish()
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.nav_home ->
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, HomeFragment()).commit()
+
+            R.id.nav_scan ->
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, ScanFragment()).commit()
+
+            R.id.nav_history ->
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, HistoryFragment()).commit()
+
+            R.id.nav_logout -> {
+                signOutAndStartSignInActivity()
+            }
+        }
+        item.isChecked = true
+        drawerLayout.closeDrawers()
+        return true
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 }

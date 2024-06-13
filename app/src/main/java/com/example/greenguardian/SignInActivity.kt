@@ -3,6 +3,8 @@ package com.example.greenguardian
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.view.LayoutInflater
 import android.widget.Button
 import android.view.WindowManager
 import android.widget.ImageView
@@ -27,15 +29,11 @@ class SignInActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signin)
 
         auth = FirebaseAuth.getInstance()
-
-
 
         val currentUser = auth.currentUser
 
@@ -43,14 +41,12 @@ class SignInActivity : AppCompatActivity() {
             // The user is already signed in, navigate to MainActivity
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-            finish() // finish the current activity to prevent the user from coming back to the SignInActivity using the back button
+            finish()
         }
-
-
-
 
         val googleButton = findViewById<ConstraintLayout>(R.id.googleButton)
         googleButton.setOnClickListener {
+            showLoadingDialog()
             signIn()
         }
     }
@@ -115,27 +111,14 @@ class SignInActivity : AppCompatActivity() {
         dialog.show()
     }
 
-//    private fun showSuccessDialog(userName: String?) {
-//        val dialogView = layoutInflater.inflate(R.layout.dialog_success, null)
-//
-//        val checkIcon = dialogView.findViewById<ImageView>(R.id.checkIcon)
-//        val successText = dialogView.findViewById<TextView>(R.id.successText)
-//        val userNameText = dialogView.findViewById<TextView>(R.id.userNameText)
-//        val okButton = dialogView.findViewById<Button>(R.id.okButton)
-//
-//        userNameText.text = "Welcome, ${userName ?: "User"}!"
-//
-//        val dialog = AlertDialog.Builder(this)
-//            .setView(dialogView)
-//            .create()
-//
-//        okButton.setOnClickListener {
-//            dialog.dismiss()
-//            startActivity(Intent(this, HomeActivity::class.java))
-//            finish()
-//        }
-//
-//        dialog.show()
-//    }
+    private fun showLoadingDialog() {
+//        val dialogBinding = CustomDialogBinding.inflate(LayoutInflater.from(this))
+        val loaderView = layoutInflater.inflate(R.layout.custom_loader, null)
+        val loaderDialog = AlertDialog.Builder(this)
+            .setView(loaderView)
+            .setCancelable(false)
+            .create()
+        loaderDialog.show()
+    }
 
 }
